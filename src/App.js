@@ -1,24 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import { auth, googleAuthProvider } from "./firebase";
+
+import { useAuthState } from "react-firebase-hooks/auth";
+
+import Container from "@material-ui/core/Container";
+import Button from "@material-ui/core/Button";
+
+import Header from "./Components/Header";
+import Roller from "./Views/Roller";
 
 function App() {
+  const [user] = useAuthState(auth);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container maxWidth="sm">
+      <Header />
+      {user ? <Roller /> : <SignIn />}
+    </Container>
+  );
+}
+
+function SignIn() {
+  const signInWithGoogle = () => {
+    auth.signInWithPopup(googleAuthProvider);
+  };
+
+  return (
+    <>
+      <Button className="sign-in" onClick={signInWithGoogle}>
+        Sign in with Google
+      </Button>
+    </>
   );
 }
 
