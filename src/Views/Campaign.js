@@ -1,30 +1,40 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import firebase from "firebase/app";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { firestore, auth } from "../firebase";
 
 import Container from "@material-ui/core/Container";
-import Badge from "@material-ui/core/Badge";
 import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
 import Tab from "@material-ui/core/Tab";
-import Tabs from "@material-ui/core/Tabs";
 import Box from "@material-ui/core/Box";
+import Tabs from "@material-ui/core/Tabs";
+import Grid from "@material-ui/core/Grid";
+import AddIcon from "@material-ui/icons/Add";
 
 import Character from "../Components/Character";
 
 export default function Campaign() {
   let { id } = useParams();
 
-  console.debug(id);
-
+  // Handle character data
   const charactersRef = firestore.collection("characters");
-  const query = charactersRef
-    .where("campaign", "==", id)
-    .orderBy("createdAt", "desc");
+  const query = charactersRef.where("campaign", "==", id);
 
   const [characters] = useCollectionData(query, { idField: "id" });
+
+  const addCharacter = async () => {
+    const user = auth.currentUser;
+
+    await charactersRef.add({
+      name: "New character",
+      campaign: id,
+      user: user.displayName,
+    });
+  };
+
+  const saveCharacter = async (data) => {
+    await charactersRef.doc(data.id).update(data);
+  };
 
   // Handle tabs
   const [tab, setTab] = useState(0);
@@ -33,23 +43,34 @@ export default function Campaign() {
   };
 
   return (
-    <Container sx={{ bgcolor: "#E2F3EE" }}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+    <Container sx={{ bgcolor: "background.main" }}>
+      <Grid
+        spacing={1}
+        container
+        sx={{ py: 1, borderBottom: 1, borderColor: "divider" }}
+      >
         <Tabs
           value={tab}
           onChange={handleChange}
           aria-label="basic tabs example"
         >
           {characters?.map((character) => {
-            return <Tab label="Item One" />;
+            return <Tab label={character.name} key={character.id} />;
           })}
         </Tabs>
-        <Button variant="outlined">Add</Button>
-      </Box>
-      {characters?.map((character) => {
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={addCharacter}
+          sx={{ ml: 1 }}
+        >
+          Add
+        </Button>
+      </Grid>
+      {characters?.map((character, i) => {
         return (
-          <TabPanel value={tab} index={0}>
-            <Character data={character} />
+          <TabPanel value={tab} index={i} key={character.id}>
+            <Character data={character} onChange={saveCharacter} />
           </TabPanel>
         );
       })}
@@ -68,11 +89,7 @@ function TabPanel(props) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
   );
 }

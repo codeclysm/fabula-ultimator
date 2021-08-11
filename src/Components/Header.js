@@ -9,7 +9,7 @@ export default function Header() {
   return (
     <AppBar position="static">
       <Toolbar>
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>
+        <Typography variant="h1" sx={{ flexGrow: 1, fontSize: "1.5rem" }}>
           Fabula Ultimator
         </Typography>
         <SignOut />
