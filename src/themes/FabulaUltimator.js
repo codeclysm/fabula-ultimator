@@ -11,6 +11,15 @@ const FabulaUltimator = createTheme({
     background: {
       main: "#E2F3EE",
     },
+    red: {
+      main: "#d1232a",
+    },
+    cyan: {
+      main: "#00aeef",
+    },
+    black: {
+      main: "#000000",
+    },
   },
   typography: {
     fontFamily: ["PT Sans Narrow", "sans-serif"].join(","),
