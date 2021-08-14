@@ -32,13 +32,13 @@ export default function Campaign() {
     });
   };
 
-  const saveCharacter = async (data) => {
-    await charactersRef.doc(data.id).update(data);
+  const saveCharacter = async (id, key, value) => {
+    await charactersRef.doc(id).update({ [key]: value });
   };
 
   // Handle tabs
   const [tab, setTab] = useState(0);
-  const handleChange = (event, newTab) => {
+  const changeTab = (event, newTab) => {
     setTab(newTab);
   };
 
@@ -49,11 +49,7 @@ export default function Campaign() {
         container
         sx={{ py: 1, borderBottom: 1, borderColor: "divider" }}
       >
-        <Tabs
-          value={tab}
-          onChange={handleChange}
-          aria-label="basic tabs example"
-        >
+        <Tabs value={tab} onChange={changeTab} aria-label="basic tabs example">
           {characters?.map((character) => {
             return <Tab label={character.name} key={character.id} />;
           })}
@@ -70,7 +66,12 @@ export default function Campaign() {
       {characters?.map((character, i) => {
         return (
           <TabPanel value={tab} index={i} key={character.id}>
-            <Character data={character} onChange={saveCharacter} />
+            <Character
+              data={character}
+              onChange={(key, value) => {
+                saveCharacter(character.id, key, value);
+              }}
+            />
           </TabPanel>
         );
       })}

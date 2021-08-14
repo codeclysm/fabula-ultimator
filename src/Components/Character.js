@@ -7,6 +7,12 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import ToggleButton from "@material-ui/core/ToggleButton";
 import ToggleButtonGroup from "@material-ui/core/ToggleButtonGroup";
 import TextField from "@material-ui/core/TextField";
+import Slider from "@material-ui/core/Slider";
+import Divider from "@material-ui/core/Divider";
+import Stack from "@material-ui/core/Stack";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Chip from "@material-ui/core/Chip";
+import Switch from "@material-ui/core/Switch";
 
 import PersonIcon from "@material-ui/icons/Person";
 import TransgenderIcon from "@material-ui/icons/Transgender";
@@ -16,6 +22,10 @@ import LightbulbIcon from "@material-ui/icons/Lightbulb";
 import SaveIcon from "@material-ui/icons/Save";
 
 import Box from "@material-ui/core/Box";
+import CharacterAbility from "./CharacterAbilities";
+import CharacterAbilities from "./CharacterAbilities";
+import { useState } from "react";
+import CharacterStatuses from "./CharacterStatus";
 
 export default function Character({ data, onChange }) {
   const formik = useFormik({
@@ -238,6 +248,54 @@ export default function Character({ data, onChange }) {
                   </Grid>
                 );
               })}
+            </Grid>
+          </Card>
+        </Grid>
+      </Grid>
+      <Grid container spacing={2}>
+        <Grid item xs={7}>
+          <CharacterAbilities
+            des={data.des}
+            bdes={data.bdes}
+            int={data.int}
+            bint={data.bint}
+            vig={data.vig}
+            bvig={data.bvig}
+            vol={data.vol}
+            bvol={data.bvol}
+            slow={data.slow}
+            confused={data.confused}
+            weak={data.weak}
+            shaken={data.shaken}
+            angry={data.angry}
+            poisoned={data.poisoned}
+            onChange={onChange}
+          />
+        </Grid>
+        <Grid item xs={5}>
+          <Card sx={{ mt: 2 }}>
+            <Typography variant="h2" sx={cardTitle}>
+              Status
+            </Typography>
+            <Grid container>
+              <Grid item xs={6}>
+                <Stack>
+                  <FormControlLabel control={<Switch />} label="Confuso" />
+                  <Divider />
+                  <FormControlLabel control={<Switch />} label="Debole" />
+                  <FormControlLabel control={<Switch />} label="Scosso" />
+                </Stack>
+              </Grid>
+              <Grid item xs={6}>
+                <Stack>
+                  <FormControlLabel
+                    sx={{ height: "140px" }}
+                    control={<Switch />}
+                    label="Furente"
+                  />
+                  <FormControlLabel control={<Switch />} label="Avvelenato" />
+                </Stack>
+              </Grid>
             </Grid>
           </Card>
         </Grid>

@@ -20,6 +20,21 @@ const FabulaUltimator = createTheme({
     h2: {
       fontFamily: ["Antonio", "sans-serif"].join(","),
     },
+    h3: {
+      fontFamily: ["Antonio", "sans-serif"].join(","),
+      fontSize: "1rem",
+      lineHeight: "1.125rem",
+    },
+    cardtitle: {
+      fontFamily: ["Antonio", "sans-serif"].join(","),
+      textAlign: "center",
+      fontSize: "1.125rem",
+      lineHeight: "1.5rem",
+      background: "#264137",
+      color: "#ffffff",
+      paddingTop: "8px",
+      paddingBottom: "8px",
+    },
   },
 });
 
