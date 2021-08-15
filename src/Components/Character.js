@@ -1,30 +1,15 @@
-import { useFormik } from "formik";
-import Card from "@material-ui/core/Card";
-import Typography from "@material-ui/core/Typography";
+import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import ToggleButton from "@material-ui/core/ToggleButton";
-import ToggleButtonGroup from "@material-ui/core/ToggleButtonGroup";
-import TextField from "@material-ui/core/TextField";
 
 import CharacterBasics from "./CharacterBasics";
 import CharacterAbilities from "./CharacterAbilities";
 import CharacterStats from "./CharacterStats";
 import CharacterTraits from "./CharacterTraits";
+import CharacterTies from "./CharacterTies";
 
 export default function Character({ data, onChange }) {
-  const formik = useFormik({
-    initialValues: data,
-    onSubmit: async (values, { setSubmitting }) => {
-      setSubmitting(true);
-      if (onChange) {
-        await onChange(values);
-      }
-      setSubmitting(false);
-    },
-  });
-
   return (
-    <form onSubmit={formik.handleSubmit} style={{ position: "relative" }}>
+    <Container>
       {/* Basics */}
       <CharacterBasics
         name={data.name}
@@ -44,103 +29,33 @@ export default function Character({ data, onChange }) {
         </Grid>
         {/* Ties */}
         <Grid item xs={7}>
-          <Card sx={{ mt: 2 }}>
-            <Typography variant="h2" sx={cardTitle}>
-              Legami
-            </Typography>
-            <Grid container>
-              {[1, 2, 3, 4, 5, 6].map((i) => {
-                return (
-                  <Grid item xs={6} key={i}>
-                    <Grid container spacing={1} sx={{ p: 1 }}>
-                      <Grid item xs={5}>
-                        <TextField
-                          name={`tie${i}_char`}
-                          value={formik.values[`tie${i}_char`]}
-                          onChange={formik.handleChange}
-                          label="Personaggio"
-                          fullWidth
-                          variant="standard"
-                        />
-                      </Grid>
-
-                      <Grid item xs={7}>
-                        <ToggleButtonGroup
-                          fullWidth
-                          size="small"
-                          exclusive
-                          name={`tie${i}_feeling1`}
-                          value={formik.values[`tie${i}_feeling1`]}
-                          onChange={formik.handleChange}
-                        >
-                          <ToggleButton
-                            name={`tie${i}_feeling1`}
-                            sx={{ p: 0 }}
-                            value="admiration"
-                          >
-                            Ammirazione
-                          </ToggleButton>
-                          <ToggleButton
-                            name={`tie${i}_feeling1`}
-                            sx={{ p: 0 }}
-                            value="inferiority"
-                          >
-                            Inferiorità
-                          </ToggleButton>
-                        </ToggleButtonGroup>
-                        <ToggleButtonGroup
-                          fullWidth
-                          size="small"
-                          exclusive
-                          name={`tie${i}_feeling2`}
-                          value={formik.values[`tie${i}_feeling2`]}
-                          onChange={formik.handleChange}
-                        >
-                          <ToggleButton
-                            name={`tie${i}_feeling2`}
-                            sx={{ p: 0 }}
-                            value="loyalty"
-                          >
-                            Lealtà
-                          </ToggleButton>
-                          <ToggleButton
-                            name={`tie${i}_feeling2`}
-                            sx={{ p: 0 }}
-                            value="mistrust"
-                          >
-                            Sfiducia
-                          </ToggleButton>
-                        </ToggleButtonGroup>
-                        <ToggleButtonGroup
-                          fullWidth
-                          size="small"
-                          exclusive
-                          name={`tie${i}_feeling3`}
-                          value={formik.values[`tie${i}_feeling3`]}
-                          onChange={formik.handleChange}
-                        >
-                          <ToggleButton
-                            name={`tie${i}_feeling3`}
-                            sx={{ p: 0 }}
-                            value="love"
-                          >
-                            Affetto
-                          </ToggleButton>
-                          <ToggleButton
-                            name={`tie${i}_feeling3`}
-                            sx={{ p: 0 }}
-                            value="hate"
-                          >
-                            Odio
-                          </ToggleButton>
-                        </ToggleButtonGroup>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                );
-              })}
-            </Grid>
-          </Card>
+          <CharacterTies
+            tie1_char={data.tie1_char}
+            tie1_feeling1={data.tie1_feeling1}
+            tie1_feeling2={data.tie1_feeling2}
+            tie1_feeling3={data.tie1_feeling3}
+            tie2_char={data.tie2_char}
+            tie2_feeling1={data.tie2_feeling1}
+            tie2_feeling2={data.tie2_feeling2}
+            tie2_feeling3={data.tie2_feeling3}
+            tie3_char={data.tie3_char}
+            tie3_feeling1={data.tie3_feeling1}
+            tie3_feeling2={data.tie3_feeling2}
+            tie3_feeling3={data.tie3_feeling3}
+            tie4_char={data.tie4_char}
+            tie4_feeling1={data.tie4_feeling1}
+            tie4_feeling2={data.tie4_feeling2}
+            tie4_feeling3={data.tie4_feeling3}
+            tie5_char={data.tie5_char}
+            tie5_feeling1={data.tie5_feeling1}
+            tie5_feeling2={data.tie5_feeling2}
+            tie5_feeling3={data.tie5_feeling3}
+            tie6_char={data.tie6_char}
+            tie6_feeling1={data.tie6_feeling1}
+            tie6_feeling2={data.tie6_feeling2}
+            tie6_feeling3={data.tie6_feeling3}
+            onChange={onChange}
+          />
         </Grid>
       </Grid>
       <Grid container spacing={2}>
@@ -175,14 +90,6 @@ export default function Character({ data, onChange }) {
           ></CharacterStats>
         </Grid>
       </Grid>
-    </form>
+    </Container>
   );
 }
-
-const cardTitle = {
-  textAlign: "center",
-  fontSize: "1.125rem",
-  background: "#264137",
-  color: "#ffffff",
-  py: 1,
-};
