@@ -6,6 +6,7 @@ import CharacterAbilities from "./CharacterAbilities";
 import CharacterStats from "./CharacterStats";
 import CharacterTraits from "./CharacterTraits";
 import CharacterTies from "./CharacterTies";
+import CharacterFabula from "./CharacterFabula";
 
 export default function Character({ data, onChange }) {
   return (
@@ -24,6 +25,11 @@ export default function Character({ data, onChange }) {
             identity={data.identity}
             theme={data.theme}
             origin={data.origin}
+            onChange={onChange}
+          />
+          <CharacterFabula
+            fabula={data.fabula}
+            exp={data.exp}
             onChange={onChange}
           />
         </Grid>
