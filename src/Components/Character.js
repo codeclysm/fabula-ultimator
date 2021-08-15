@@ -2,20 +2,11 @@ import { useFormik } from "formik";
 import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import InputAdornment from "@material-ui/core/InputAdornment";
 import ToggleButton from "@material-ui/core/ToggleButton";
 import ToggleButtonGroup from "@material-ui/core/ToggleButtonGroup";
 import TextField from "@material-ui/core/TextField";
 
-import PersonIcon from "@material-ui/icons/Person";
-import TransgenderIcon from "@material-ui/icons/Transgender";
-import AutoStoriesIcon from "@material-ui/icons/AutoStories";
-import MapIcon from "@material-ui/icons/Map";
-import LightbulbIcon from "@material-ui/icons/Lightbulb";
-import SaveIcon from "@material-ui/icons/Save";
-
-import Box from "@material-ui/core/Box";
+import CharacterBasics from "./CharacterBasics";
 import CharacterAbilities from "./CharacterAbilities";
 import CharacterStats from "./CharacterStats";
 import CharacterTraits from "./CharacterTraits";
@@ -34,54 +25,13 @@ export default function Character({ data, onChange }) {
 
   return (
     <form onSubmit={formik.handleSubmit} style={{ position: "relative" }}>
-      <Grid container spacing={1}>
-        <Grid item xs={6}>
-          <TextField
-            label="Nome"
-            fullWidth
-            variant="standard"
-            name="name"
-            value={formik.values.name}
-            onChange={formik.handleChange}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <PersonIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <TextField
-            name="gender"
-            fullWidth
-            value={formik.values.gender}
-            onChange={formik.handleChange}
-            label="Genere"
-            variant="standard"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <TransgenderIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </Grid>
-        <Grid item xs={1}></Grid>
-        <Grid item xs={1}>
-          <Button
-            size="large"
-            variant="contained"
-            fullWidth
-            startIcon={<SaveIcon />}
-            type="submit"
-          >
-            Save
-          </Button>
-        </Grid>
-      </Grid>
+      {/* Basics */}
+      <CharacterBasics
+        name={data.name}
+        player={data.player}
+        gender={data.gender}
+        onChange={onChange}
+      />
       {/* Traits */}
       <Grid container spacing={2}>
         <Grid item xs={5}>
