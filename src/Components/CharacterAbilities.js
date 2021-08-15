@@ -113,8 +113,6 @@ function CharacterAbility({
   ability,
   setAbility,
 }) {
-  console.debug(baseAbility, setBaseAbility, ability, setAbility);
-
   return (
     <Grid container justifyContent="center" sx={{ py: 2 }}>
       <Grid item>

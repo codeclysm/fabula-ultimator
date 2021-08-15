@@ -18,6 +18,7 @@ import SaveIcon from "@material-ui/icons/Save";
 import Box from "@material-ui/core/Box";
 import CharacterAbilities from "./CharacterAbilities";
 import CharacterStats from "./CharacterStats";
+import CharacterTraits from "./CharacterTraits";
 
 export default function Character({ data, onChange }) {
   const formik = useFormik({
@@ -84,64 +85,12 @@ export default function Character({ data, onChange }) {
       {/* Traits */}
       <Grid container spacing={2}>
         <Grid item xs={5}>
-          <Card sx={{ mt: 2 }}>
-            <Typography variant="h2" sx={cardTitle}>
-              Tratti
-            </Typography>
-            <Box sx={{ p: 1 }}>
-              <TextField
-                name="identity"
-                value={formik.values.identity}
-                onChange={formik.handleChange}
-                label="Identità"
-                fullWidth
-                variant="standard"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <AutoStoriesIcon />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Box>
-            <Grid container spacing={1} sx={{ p: 1 }}>
-              <Grid item xs={6}>
-                <TextField
-                  name="theme"
-                  value={formik.values.theme}
-                  onChange={formik.handleChange}
-                  label="Tema"
-                  fullWidth
-                  variant="standard"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <LightbulbIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  name="origin"
-                  value={formik.values.origin}
-                  onChange={formik.handleChange}
-                  label="Origine"
-                  fullWidth
-                  variant="standard"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <MapIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Grid>
-            </Grid>
-          </Card>
+          <CharacterTraits
+            identity={data.identity}
+            theme={data.theme}
+            origin={data.origin}
+            onChange={onChange}
+          />
         </Grid>
         {/* Ties */}
         <Grid item xs={7}>

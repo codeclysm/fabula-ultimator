@@ -1,5 +1,4 @@
-import debounce from "lodash";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { firestore, auth } from "../firebase";
