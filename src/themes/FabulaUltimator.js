@@ -22,6 +22,7 @@ const FabulaUltimator = createTheme({
     },
   },
   typography: {
+    fontSize: 20,
     fontFamily: ["PT Sans Narrow", "sans-serif"].join(","),
     h1: {
       fontFamily: ["Antonio", "sans-serif"].join(","),

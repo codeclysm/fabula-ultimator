@@ -18,7 +18,7 @@ function App() {
 
   return (
     <ThemeProvider theme={FabulaUltimator}>
-      <Container maxWidth="lg">
+      <Container maxWidth="md">
         <Header />
         {user ? (
           <Router>

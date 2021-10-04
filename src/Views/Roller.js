@@ -4,14 +4,16 @@ import firebase from "firebase/app";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { firestore, auth } from "../firebase";
 
+import { formatDistance } from "date-fns";
+
 import Container from "@material-ui/core/Container";
 import Badge from "@material-ui/core/Badge";
 import Button from "@material-ui/core/Button";
 import Stack from "@material-ui/core/Stack";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
-import Card from "@material-ui/core/Card";
 import Box from "@material-ui/core/Box";
+import TextField from "@material-ui/core/TextField";
 
 export default function Roller() {
   const rollsRef = firestore.collection("rolls");
@@ -25,6 +27,8 @@ export default function Roller() {
   const [d10, setd10] = useState(0);
   const [d12, setd12] = useState(0);
   const [d20, setd20] = useState(0);
+  const [bonus, setBonus] = useState(0);
+  const [malus, setMalus] = useState(0);
 
   const resetDice = (e) => {
     e.preventDefault();
@@ -34,6 +38,8 @@ export default function Roller() {
     setd10(0);
     setd12(0);
     setd20(0);
+    setBonus(0);
+    setMalus(0);
   };
 
   const sendRoll = async (e) => {
@@ -52,8 +58,12 @@ export default function Roller() {
 
     await rollsRef.add({
       dice: rolls,
-      sum: sum(rolls),
+      sum: sum(rolls, bonus + malus),
+      hr: hr(rolls),
+      crit: crit(rolls),
+      fumble: fumble(rolls),
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      bonus: bonus + malus,
       user: user.displayName,
     });
   };
@@ -98,7 +108,7 @@ export default function Roller() {
             >
               d8
             </Button>
-          </Badge>{" "}
+          </Badge>
         </Grid>
         <Grid item>
           <Badge badgeContent={d10} color="secondary">
@@ -111,7 +121,7 @@ export default function Roller() {
             >
               d10
             </Button>
-          </Badge>{" "}
+          </Badge>
         </Grid>
         <Grid item>
           <Badge badgeContent={d12} color="secondary">
@@ -124,7 +134,7 @@ export default function Roller() {
             >
               d12
             </Button>
-          </Badge>{" "}
+          </Badge>
         </Grid>
         <Grid item>
           <Badge badgeContent={d20} color="secondary">
@@ -137,7 +147,34 @@ export default function Roller() {
             >
               d20
             </Button>
-          </Badge>{" "}
+          </Badge>
+        </Grid>
+        <Grid item sx={{ borderLeft: "1px solid black" }}></Grid>
+        <Grid item>
+          <Badge badgeContent={bonus} color="secondary">
+            <Button
+              variant="outlined"
+              size="large"
+              onClick={() => {
+                setBonus(bonus + 1);
+              }}
+            >
+              bonus
+            </Button>
+          </Badge>
+        </Grid>
+        <Grid item>
+          <Badge badgeContent={malus} color="secondary">
+            <Button
+              variant="outlined"
+              size="large"
+              onClick={() => {
+                setMalus(malus - 1);
+              }}
+            >
+              malus
+            </Button>
+          </Badge>
         </Grid>
       </Grid>
       <Grid container spacing={1} sx={{ my: 2 }}>
@@ -155,32 +192,84 @@ export default function Roller() {
 
       <Stack spacing={2}>
         {rolls &&
-          rolls.map((roll) => {
+          rolls.map((roll, i) => {
             return (
-              <Card sx={{ px: 1, py: 1 }} key={roll.createdAt}>
-                <Grid container spacing={1}>
-                  <Grid item sx={{ width: "30px" }}>
+              <Grid
+                container
+                key={i}
+                sx={{
+                  p: 1,
+                  borderBottom: "1px solid black",
+                }}
+              >
+                <Grid item>
+                  {roll.crit && (
                     <Typography
-                      sx={{ fontSize: "bigger", color: "secondary.main" }}
+                      color="primary.main"
+                      fontSize="2rem"
+                      sx={{ my: 2 }}
                     >
-                      {roll.sum}
+                      Critical !
                     </Typography>
+                  )}
+                  {roll.fumble && (
+                    <Typography color="red.main" fontSize="2rem" sx={{ my: 2 }}>
+                      Fumble !
+                    </Typography>
+                  )}
+                  <Grid container spacing={2}>
+                    <Grid item>
+                      <TextField
+                        label="Result"
+                        value={roll.sum}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <TextField
+                        label="Highest Roll"
+                        value={roll.hr}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Typography>{roll.user}</Typography>
+                      {roll.createdAt && (
+                        <Typography>
+                          {formatDistance(roll.createdAt.toDate(), new Date())}{" "}
+                          ago
+                        </Typography>
+                      )}
+                    </Grid>
                   </Grid>
-                  <Grid item>
-                    <Typography>{roll.user}</Typography>
-                  </Grid>
-                  <Grid item></Grid>
-                </Grid>
-                <Typography component="div" sx={{ mt: 1, fontSize: "smaller" }}>
-                  {roll.dice.map((die, i) => {
-                    return (
-                      <Box sx={{ pr: 1, display: "inline-flex" }} key={i}>
-                        {die.size + ":" + die.value}
+                  <Typography component="div" sx={{ mt: 1 }}>
+                    {roll.dice.map((die, i) => {
+                      return (
+                        <Box sx={{ pr: 1, display: "inline-flex" }} key={i}>
+                          {die.size + ":" + die.value}
+                        </Box>
+                      );
+                    })}
+                    {roll.bonus > 0 && (
+                      <Box sx={{ pr: 1, display: "inline-flex" }}>
+                        +{roll.bonus}
                       </Box>
-                    );
-                  })}
-                </Typography>
-              </Card>
+                    )}
+                    {roll.bonus < 0 && (
+                      <Box sx={{ pr: 1, display: "inline-flex" }}>
+                        {roll.bonus}
+                      </Box>
+                    )}
+                  </Typography>
+                </Grid>
+                {/* <Grid item>
+                  <pre>{JSON.stringify(roll, null, 2)}</pre>
+                </Grid> */}
+              </Grid>
             );
           })}
       </Stack>
@@ -203,12 +292,52 @@ const roll = (size, number) => {
   return rolls;
 };
 
-const sum = (rolls) => {
+const sum = (rolls, bonus) => {
   let sum = 0;
 
   for (let i = 0; i < rolls.length; i++) {
     sum = sum + rolls[i].value;
   }
 
-  return sum;
+  return sum + bonus;
+};
+
+const hr = (rolls) => {
+  let highest = 0;
+
+  for (let i = 0; i < rolls.length; i++) {
+    if (rolls[i].value > highest) {
+      highest = rolls[i].value;
+    }
+  }
+
+  return highest;
+};
+
+const crit = (rolls) => {
+  let previous = 0;
+
+  for (let i = 0; i < rolls.length; i++) {
+    if (rolls[i].value < 6) {
+      return false;
+    }
+    if (previous === 0) {
+      previous = rolls[i].value;
+    }
+    if (rolls[i].value !== previous) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+const fumble = (rolls) => {
+  for (let i = 0; i < rolls.length; i++) {
+    if (rolls[i].value !== 1) {
+      return false;
+    }
+  }
+
+  return true;
 };
